@@ -1,0 +1,146 @@
+Compare the kubia-rc.yaml (/root/kubernetes-training/04-controllers) and the kubia-replicaset.yaml (/root/kubernetes-training/05-services).
+
+1. What are the differences file-wise?
+
+[root@ip-172-31-17-71 kubernetes-training]# diff /root/kubernetes-training/04-controllers/kubia-rc.yaml /root/kubernetes-training/05-services/kubia-replicaset.yaml
+1,2c1,2
+< apiVersion: v1
+< kind: ReplicationController
+---
+> apiVersion: apps/v1
+> kind: ReplicaSet
+4c4
+<   name: kubia2
+---
+>   name: kubia
+8c8,9
+<     app: kubia
+---
+>     matchLabels:
+>       app: kubia
+17,18d17
+<         ports:
+<         - containerPort: 8080
+
+2.Run the kubia-replicaset.yaml 
+3. 
+
+[root@ip-172-31-17-71 kubernetes-training]# cd 05-services
+[root@ip-172-31-17-71 05-services]# ll
+total 72
+-rw-r--r-- 1 root root  161 Jun 30 05:40 external-service-endpoints.yaml
+-rw-r--r-- 1 root root  149 Jun 30 05:40 external-service-externalname.yaml
+-rw-r--r-- 1 root root   93 Jun 30 05:40 external-service.yaml
+drwxr-xr-x 2 root root   96 Jun 30 05:40 ingress
+-rw-r--r-- 1 root root  302 Jun 30 05:40 kubia-ingress-tls.yaml
+-rw-r--r-- 1 root root  232 Jun 30 05:40 kubia-ingress.yaml
+-rw-r--r-- 1 root root  194 Jun 30 05:40 kubia-pod.yml
+-rw-r--r-- 1 root root  418 Jun 30 05:40 kubia-rc-readinessprobe.yaml
+-rw-r--r-- 1 root root  261 Jun 30 05:40 kubia-replicaset.yaml
+-rw-r--r-- 1 root root  158 Jun 30 05:40 kubia-svc-client-ip-session-affinity.yaml
+-rw-r--r-- 1 root root  157 Jun 30 05:40 kubia-svc-headless.yaml
+-rw-r--r-- 1 root root  164 Jun 30 05:40 kubia-svc-loadbalancer.yaml
+-rw-r--r-- 1 root root  196 Jun 30 05:40 kubia-svc-named-ports.yaml
+-rw-r--r-- 1 root root  217 Jun 30 05:40 kubia-svc-nodeport-onlylocal.yaml
+-rw-r--r-- 1 root root  176 Jun 30 05:40 kubia-svc-nodeport.yaml
+-rw-r--r-- 1 root root  167 Jun 30 05:40 kubia-svc-publish-not-ready.yaml
+-rw-r--r-- 1 root root  156 Jun 30 05:40 kubia-svc.yaml
+-rw-r--r-- 1 root root 1115 Jun 30 05:40 tls.cert
+-rw-r--r-- 1 root root 1675 Jun 30 05:40 tls.key
+[root@ip-172-31-17-71 05-services]# vi kubia-replicaset.yaml
+
+3. dentify what commands can be run after "kubectl apply...."
+
+[root@ip-172-31-17-71 05-services]# kubectl apply -f kubia-replicaset.yaml
+replicaset.apps/kubia created
+
+[root@ip-172-31-17-71 05-services]# kubectl get po
+NAME           READY   STATUS    RESTARTS   AGE
+kubia-59jjm    1/1     Running   0          50s
+kubia-mq487    1/1     Running   0          50s
+kubia-v4sth    1/1     Running   0          50s
+nginx-kalyan   1/1     Running   0          25h
+
+4. Make a service over these pods (kubia-replicaset) and see if the service picks up the web-service within the pod ("You have hit....." message)
+
+[root@ip-172-31-17-71 kubernetes-training]# cd 05-services
+[root@ip-172-31-17-71 05-services]# ls
+external-service-endpoints.yaml     kubia-rc-readinessprobe.yaml               kubia-svc-nodeport.yaml
+external-service-externalname.yaml  kubia-replicaset.yaml                      kubia-svc-publish-not-ready.yaml
+external-service.yaml               kubia-svc-client-ip-session-affinity.yaml  kubia-svc.yaml
+ingress                             kubia-svc-headless.yaml                    tls.cert
+kubia-ingress-tls.yaml              kubia-svc-loadbalancer.yaml                tls.key
+kubia-ingress.yaml                  kubia-svc-named-ports.yaml
+kubia-pod.yml                       kubia-svc-nodeport-onlylocal.yaml
+[root@ip-172-31-17-71 05-services]# vi kubia-svc.yaml
+[root@ip-172-31-17-71 05-services]# cat kubia-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubia2
+spec:
+  clusterIP: 10.99.10.99
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: kubia
+
+[root@ip-172-31-17-71 05-services]# kubectl apply -f kubia-svc.yaml
+service/kubia2 created
+[root@ip-172-31-17-71 05-services]# kubectl get svc
+NAME         TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)   AGE
+kubernetes   ClusterIP   10.96.0.1     <none>        443/TCP   3d
+kubia2       ClusterIP   10.99.10.99   <none>        80/TCP    9s
+[root@ip-172-31-17-71 05-services]# curl 10.96.0.1
+
+[root@ip-172-31-17-71 05-services]# curl 10.96.0.1:80
+
+[root@ip-172-31-17-71 05-services]# curl 10.99.10.99
+You've hit kubia-krbtp
+[root@ip-172-31-17-71 05-services]# curl 10.99.10.99:80
+You've hit kubia-mq487
+
+5. Negative Testing : change the labels of the pod and see if the service is still applied on those pods
+
+[root@ip-172-31-17-71 05-services]# kubectl get po --show-labels
+NAME           READY   STATUS    RESTARTS   AGE    LABELS
+kubia-krbtp    1/1     Running   0          23h    app=kubia
+kubia-mq487    1/1     Running   0          23h    app=kubia
+kubia-v4sth    1/1     Running   0          23h    app=kubia
+nginx-kalyan   1/1     Running   0          2d1h   run=nginx-kalyan
+[root@ip-172-31-17-71 05-services]# kubectl label pod kubia-krbtp app=mavenir-sc
+error: 'app' already has a value (kubia), and --overwrite is false
+[root@ip-172-31-17-71 05-services]# kubectl label pod kubia-krbtp app=mavenir-sc --overwrite
+pod/kubia-krbtp labeled
+[root@ip-172-31-17-71 05-services]# kubectl get po --show-labels
+NAME           READY   STATUS              RESTARTS   AGE    LABELS
+kubia-krbtp    1/1     Running             0          23h    app=mavenir-sc
+kubia-mq487    1/1     Running             0          23h    app=kubia
+kubia-s84b6    0/1     ContainerCreating   0          4s     app=kubia
+kubia-v4sth    1/1     Running             0          23h    app=kubia
+nginx-kalyan   1/1     Running             0          2d1h   run=nginx-kalyan
+[root@ip-172-31-17-71 05-services]# kubectl get po --show-labels
+NAME           READY   STATUS    RESTARTS   AGE    LABELS
+kubia-krbtp    1/1     Running   0          23h    app=mavenir-sc
+kubia-mq487    1/1     Running   0          23h    app=kubia
+kubia-s84b6    1/1     Running   0          8s     app=kubia
+kubia-v4sth    1/1     Running   0          23h    app=kubia
+nginx-kalyan   1/1     Running   0          2d1h   run=nginx-kalyan
+[root@ip-172-31-17-71 05-services]# kubectl get po --show-labels
+NAME           READY   STATUS    RESTARTS   AGE    LABELS
+kubia-krbtp    1/1     Running   0          23h    app=mavenir-sc
+kubia-mq487    1/1     Running   0          23h    app=kubia
+kubia-s84b6    1/1     Running   0          10s    app=kubia
+kubia-v4sth    1/1     Running   0          23h    app=kubia
+nginx-kalyan   1/1     Running   0          2d1h   run=nginx-kalyan
+[root@ip-172-31-17-71 05-services]# curl 10.99.10.99:80
+You've hit kubia-s84b6
+[root@ip-172-31-17-71 05-services]#
+
+
+
+
+
+
+

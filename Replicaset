@@ -22,6 +22,8 @@ Compare the kubia-rc.yaml (/root/kubernetes-training/04-controllers) and the kub
 <         ports:
 <         - containerPort: 8080
 
+
+=============================================================================================
 2.Run the kubia-replicaset.yaml 
 3. 
 
@@ -49,6 +51,8 @@ drwxr-xr-x 2 root root   96 Jun 30 05:40 ingress
 -rw-r--r-- 1 root root 1675 Jun 30 05:40 tls.key
 [root@ip-172-31-17-71 05-services]# vi kubia-replicaset.yaml
 
+========================================================================================
+
 3. dentify what commands can be run after "kubectl apply...."
 
 [root@ip-172-31-17-71 05-services]# kubectl apply -f kubia-replicaset.yaml
@@ -60,6 +64,8 @@ kubia-59jjm    1/1     Running   0          50s
 kubia-mq487    1/1     Running   0          50s
 kubia-v4sth    1/1     Running   0          50s
 nginx-kalyan   1/1     Running   0          25h
+
+=========================================================================================
 
 4. Make a service over these pods (kubia-replicaset) and see if the service picks up the web-service within the pod ("You have hit....." message)
 
@@ -100,6 +106,8 @@ kubia2       ClusterIP   10.99.10.99   <none>        80/TCP    9s
 You've hit kubia-krbtp
 [root@ip-172-31-17-71 05-services]# curl 10.99.10.99:80
 You've hit kubia-mq487
+
+=========================================================================================
 
 5. Negative Testing : change the labels of the pod and see if the service is still applied on those pods
 

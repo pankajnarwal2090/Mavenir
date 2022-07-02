@@ -1,0 +1,406 @@
+go to cronjob.yaml (/root/kubernetes-training/04-controllers)
+Open the file and change the 1st line to (apiVersion: batch/v1beta1).
+
+[root@ip-172-31-17-71 05-services]# cd /root/kubernetes-training/04-controllers
+[root@ip-172-31-17-71 04-controllers]# ll
+total 44
+drwxr-xr-x 2 root root  24 Jun 30 05:40 batch-job
+-rw-r--r-- 1 root root 239 Jun 30 05:40 batch-job.yaml
+-rw-r--r-- 1 root root 371 Jun 30 05:40 cronjob.yaml
+-rw-r--r-- 1 root root 227 Jun 30 05:40 kubia-liveness-probe-initial-delay.yaml
+-rw-r--r-- 1 root root 197 Jun 30 05:40 kubia-liveness-probe.yaml
+-rw-r--r-- 1 root root 294 Jun 30 05:40 kubia-rc.yaml
+-rw-r--r-- 1 root root 325 Jun 30 05:40 kubia-replicaset-matchexpressions.yaml
+-rw-r--r-- 1 root root 266 Jun 30 05:40 kubia-replicaset.yaml
+drwxr-xr-x 2 root root  38 Jun 30 05:40 kubia-unhealthy
+-rw-r--r-- 1 root root 273 Jun 30 05:40 multi-completion-batch-job.yaml
+-rw-r--r-- 1 root root 290 Jun 30 05:40 multi-completion-parallel-batch-job.yaml
+drwxr-xr-x 2 root root  24 Jun 30 05:40 ssd-monitor
+-rw-r--r-- 1 root root 313 Jun 30 05:40 ssd-monitor-daemonset.yaml
+-rw-r--r-- 1 root root 280 Jun 30 05:40 time-limited-batch-job.yaml
+[root@ip-172-31-17-71 04-controllers]# vi  cronjob.yaml
+[root@ip-172-31-17-71 04-controllers]# cat  cronjob.yaml
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: batch-job-every-fifteen-minutes
+spec:
+  schedule: "0,15,30,45 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: periodic-batch-job
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: main
+            image: luksa/batch-job
+[root@ip-172-31-17-71 04-controllers]#
+
+[root@ip-172-31-17-71 05-services]# cd /root/kubernetes-training/04-controllers
+[root@ip-172-31-17-71 04-controllers]# ll
+total 44
+drwxr-xr-x 2 root root  24 Jun 30 05:40 batch-job
+-rw-r--r-- 1 root root 239 Jun 30 05:40 batch-job.yaml
+-rw-r--r-- 1 root root 371 Jun 30 05:40 cronjob.yaml
+-rw-r--r-- 1 root root 227 Jun 30 05:40 kubia-liveness-probe-initial-delay.yaml
+-rw-r--r-- 1 root root 197 Jun 30 05:40 kubia-liveness-probe.yaml
+-rw-r--r-- 1 root root 294 Jun 30 05:40 kubia-rc.yaml
+-rw-r--r-- 1 root root 325 Jun 30 05:40 kubia-replicaset-matchexpressions.yaml
+-rw-r--r-- 1 root root 266 Jun 30 05:40 kubia-replicaset.yaml
+drwxr-xr-x 2 root root  38 Jun 30 05:40 kubia-unhealthy
+-rw-r--r-- 1 root root 273 Jun 30 05:40 multi-completion-batch-job.yaml
+-rw-r--r-- 1 root root 290 Jun 30 05:40 multi-completion-parallel-batch-job.yaml
+drwxr-xr-x 2 root root  24 Jun 30 05:40 ssd-monitor
+-rw-r--r-- 1 root root 313 Jun 30 05:40 ssd-monitor-daemonset.yaml
+-rw-r--r-- 1 root root 280 Jun 30 05:40 time-limited-batch-job.yaml
+[root@ip-172-31-17-71 04-controllers]# vi  cronjob.yaml
+[root@ip-172-31-17-71 04-controllers]# cat  cronjob.yaml
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: batch-job-every-fifteen-minutes
+spec:
+  schedule: "0,15,30,45 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: periodic-batch-job
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: main
+            image: luksa/batch-job
+[root@ip-172-31-17-71 04-controllers]#
+
+
+[root@ip-172-31-17-71 05-services]# cd /root/kubernetes-training/04-controllers
+[root@ip-172-31-17-71 04-controllers]# ll
+total 44
+drwxr-xr-x 2 root root  24 Jun 30 05:40 batch-job
+-rw-r--r-- 1 root root 239 Jun 30 05:40 batch-job.yaml
+-rw-r--r-- 1 root root 371 Jun 30 05:40 cronjob.yaml
+-rw-r--r-- 1 root root 227 Jun 30 05:40 kubia-liveness-probe-initial-delay.yaml
+-rw-r--r-- 1 root root 197 Jun 30 05:40 kubia-liveness-probe.yaml
+-rw-r--r-- 1 root root 294 Jun 30 05:40 kubia-rc.yaml
+-rw-r--r-- 1 root root 325 Jun 30 05:40 kubia-replicaset-matchexpressions.yaml
+-rw-r--r-- 1 root root 266 Jun 30 05:40 kubia-replicaset.yaml
+drwxr-xr-x 2 root root  38 Jun 30 05:40 kubia-unhealthy
+-rw-r--r-- 1 root root 273 Jun 30 05:40 multi-completion-batch-job.yaml
+-rw-r--r-- 1 root root 290 Jun 30 05:40 multi-completion-parallel-batch-job.yaml
+drwxr-xr-x 2 root root  24 Jun 30 05:40 ssd-monitor
+-rw-r--r-- 1 root root 313 Jun 30 05:40 ssd-monitor-daemonset.yaml
+-rw-r--r-- 1 root root 280 Jun 30 05:40 time-limited-batch-job.yaml
+[root@ip-172-31-17-71 04-controllers]# vi  cronjob.yaml
+[root@ip-172-31-17-71 04-controllers]# cat  cronjob.yaml
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: batch-job-every-fifteen-minutes
+spec:
+  schedule: "0,15,30,45 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: periodic-batch-job
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: main
+            image: luksa/batch-job
+[root@ip-172-31-17-71 04-controllers]#
+======================================================================================
+======================================================
+3. Run this file
+5. Observe and if possible, paste the results from your practicals.
+
+
+[root@ip-172-31-17-71 04-controllers]# kubectl apply -f cronjob.yaml
+cronjob.batch/batch-job-every-fifteen-minutes created
+[root@ip-172-31-17-71 04-controllers]# kubectl get cronjob batch-job-every-fifteen-minutes
+NAME                              SCHEDULE             SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+batch-job-every-fifteen-minutes   0,15,30,45 * * * *   False     0        <none>          16s
+[root@ip-172-31-17-71 04-controllers]# kubectl get cronjob batch-job-every-fifteen-minutes
+NAME                              SCHEDULE             SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+batch-job-every-fifteen-minutes   0,15,30,45 * * * *   False     0        <none>          25s
+[root@ip-172-31-17-71 04-controllers]# kubectl get ns
+NAME              STATUS   AGE
+default           Active   3d1h
+kube-node-lease   Active   3d1h
+kube-public       Active   3d1h
+kube-system       Active   3d1h
+[root@ip-172-31-17-71 04-controllers]# kubectl get po -n default
+NAME           READY   STATUS    RESTARTS   AGE
+kubia-krbtp    1/1     Running   0          23h
+kubia-mq487    1/1     Running   0          23h
+kubia-s84b6    1/1     Running   0          17m
+kubia-v4sth    1/1     Running   0          23h
+nginx-kalyan   1/1     Running   0          2d1h
+[root@ip-172-31-17-71 04-controllers]# kubectl get po -n default -o wide
+NAME           READY   STATUS    RESTARTS   AGE    IP            NODE                                               NOMINATED NODE   READINESS GATES
+kubia-krbtp    1/1     Running   0          23h    192.168.2.7   ip-172-31-16-138.ap-southeast-1.compute.internal   <none>           <none>
+kubia-mq487    1/1     Running   0          23h    192.168.2.6   ip-172-31-16-138.ap-southeast-1.compute.internal   <none>           <none>
+kubia-s84b6    1/1     Running   0          17m    192.168.2.8   ip-172-31-16-138.ap-southeast-1.compute.internal   <none>           <none>
+kubia-v4sth    1/1     Running   0          23h    192.168.2.4   ip-172-31-16-138.ap-southeast-1.compute.internal   <none>           <none>
+nginx-kalyan   1/1     Running   0          2d1h   192.168.2.3   ip-172-31-16-138.ap-southeast-1.compute.internal   <none>           <none>
+[root@ip-172-31-17-71 04-controllers]# kubectl get cronjob batch-job-every-fifteen-minutes
+NAME                              SCHEDULE             SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+batch-job-every-fifteen-minutes   0,15,30,45 * * * *   False     0        <none>          109s
+[root@ip-172-31-17-71 04-controllers]# kubectl describe po batch-job-every-fifteen-minutes
+Error from server (NotFound): pods "batch-job-every-fifteen-minutes" not found
+[root@ip-172-31-17-71 04-controllers]# kubectl get cronjob batch-job-every-fifteen-minutes
+NAME                              SCHEDULE             SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+batch-job-every-fifteen-minutes   0,15,30,45 * * * *   False     0        <none>          3m9s
+[root@ip-172-31-17-71 04-controllers]# kubectl get po -n default -o wide
+NAME           READY   STATUS    RESTARTS   AGE    IP            NODE                                               NOMINATED NODE   READINESS GATES
+kubia-krbtp    1/1     Running   0          23h    192.168.2.7   ip-172-31-16-138.ap-southeast-1.compute.internal   <none>           <none>
+kubia-mq487    1/1     Running   0          24h    192.168.2.6   ip-172-31-16-138.ap-southeast-1.compute.internal   <none>           <none>
+kubia-s84b6    1/1     Running   0          19m    192.168.2.8   ip-172-31-16-138.ap-southeast-1.compute.internal   <none>           <none>
+kubia-v4sth    1/1     Running   0          24h    192.168.2.4   ip-172-31-16-138.ap-southeast-1.compute.internal   <none>           <none>
+nginx-kalyan   1/1     Running   0          2d1h   192.168.2.3   ip-172-31-16-138.ap-southeast-1.compute.internal   <none>           <none>
+[root@ip-172-31-17-71 04-controllers]# kubectl get po
+NAME           READY   STATUS    RESTARTS   AGE
+kubia-krbtp    1/1     Running   0          23h
+kubia-mq487    1/1     Running   0          24h
+kubia-s84b6    1/1     Running   0          19m
+kubia-v4sth    1/1     Running   0          24h
+nginx-kalyan   1/1     Running   0          2d1h
+[root@ip-172-31-17-71 04-controllers]# kubectl get batch-job-every-fifteen-minutes
+error: the server doesn't have a resource type "batch-job-every-fifteen-minutes"
+[root@ip-172-31-17-71 04-controllers]# kubectl get cronjob batch-job-every-fifteen-minutes
+NAME                              SCHEDULE             SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+batch-job-every-fifteen-minutes   0,15,30,45 * * * *   False     0        <none>          4m1s
+[root@ip-172-31-17-71 04-controllers]# kubectl get po
+NAME           READY   STATUS    RESTARTS   AGE
+kubia-krbtp    1/1     Running   0          23h
+kubia-mq487    1/1     Running   0          24h
+kubia-s84b6    1/1     Running   0          21m
+kubia-v4sth    1/1     Running   0          24h
+nginx-kalyan   1/1     Running   0          2d1h
+[root@ip-172-31-17-71 04-controllers]# kubectl get po
+NAME           READY   STATUS    RESTARTS   AGE
+kubia-krbtp    1/1     Running   0          23h
+kubia-mq487    1/1     Running   0          24h
+kubia-s84b6    1/1     Running   0          23m
+kubia-v4sth    1/1     Running   0          24h
+nginx-kalyan   1/1     Running   0          2d2h
+[root@ip-172-31-17-71 04-controllers]# kubectl get cronjob batch-job-every-fifteen-minutes
+NAME                              SCHEDULE             SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+batch-job-every-fifteen-minutes   0,15,30,45 * * * *   False     0        <none>          7m17s
+[root@ip-172-31-17-71 04-controllers]# kubectl get po
+NAME           READY   STATUS    RESTARTS   AGE
+kubia-krbtp    1/1     Running   0          23h
+kubia-mq487    1/1     Running   0          24h
+kubia-s84b6    1/1     Running   0          23m
+kubia-v4sth    1/1     Running   0          24h
+nginx-kalyan   1/1     Running   0          2d2h
+[root@ip-172-31-17-71 04-controllers]# kubectl get po
+NAME           READY   STATUS    RESTARTS   AGE
+kubia-krbtp    1/1     Running   0          24h
+kubia-mq487    1/1     Running   0          24h
+kubia-s84b6    1/1     Running   0          24m
+kubia-v4sth    1/1     Running   0          24h
+nginx-kalyan   1/1     Running   0          2d2h
+[root@ip-172-31-17-71 04-controllers]# kubectl get po -n default -o wide
+NAME           READY   STATUS    RESTARTS   AGE    IP            NODE                                               NOMINATED NODE   READINESS GATES
+kubia-krbtp    1/1     Running   0          24h    192.168.2.7   ip-172-31-16-138.ap-southeast-1.compute.internal   <none>           <none>
+kubia-mq487    1/1     Running   0          24h    192.168.2.6   ip-172-31-16-138.ap-southeast-1.compute.internal   <none>           <none>
+kubia-s84b6    1/1     Running   0          24m    192.168.2.8   ip-172-31-16-138.ap-southeast-1.compute.internal   <none>           <none>
+kubia-v4sth    1/1     Running   0          24h    192.168.2.4   ip-172-31-16-138.ap-southeast-1.compute.internal   <none>           <none>
+nginx-kalyan   1/1     Running   0          2d2h   192.168.2.3   ip-172-31-16-138.ap-southeast-1.compute.internal   <none>           <none>
+[root@ip-172-31-17-71 04-controllers]# kubectl get ns
+NAME              STATUS   AGE
+default           Active   3d1h
+kube-node-lease   Active   3d1h
+kube-public       Active   3d1h
+kube-system       Active   3d1h
+[root@ip-172-31-17-71 04-controllers]# kubectl get po -A
+NAMESPACE     NAME                                                                      READY   STATUS    RESTARTS   AGE
+default       kubia-krbtp                                                               1/1     Running   0          24h
+default       kubia-mq487                                                               1/1     Running   0          24h
+default       kubia-s84b6                                                               1/1     Running   0          25m
+default       kubia-v4sth                                                               1/1     Running   0          24h
+default       nginx-kalyan                                                              1/1     Running   0          2d2h
+kube-system   calico-etcd-pzn46                                                         1/1     Running   0          3d
+kube-system   calico-kube-controllers-7997dc8d7b-z5tsb                                  1/1     Running   0          3d
+kube-system   calico-node-6zr8z                                                         2/2     Running   2          3d
+kube-system   calico-node-ggmcd                                                         2/2     Running   2          3d
+kube-system   coredns-66bff467f8-5rvqv                                                  1/1     Running   0          3d1h
+kube-system   coredns-66bff467f8-9qpq7                                                  1/1     Running   0          3d1h
+kube-system   etcd-ip-172-31-17-71.ap-southeast-1.compute.internal                      1/1     Running   0          3d1h
+kube-system   kube-apiserver-ip-172-31-17-71.ap-southeast-1.compute.internal            1/1     Running   0          3d1h
+kube-system   kube-controller-manager-ip-172-31-17-71.ap-southeast-1.compute.internal   1/1     Running   0          3d1h
+kube-system   kube-proxy-4qrtb                                                          1/1     Running   0          3d1h
+kube-system   kube-proxy-cxnkn                                                          1/1     Running   0          3d1h
+kube-system   kube-scheduler-ip-172-31-17-71.ap-southeast-1.compute.internal            1/1     Running   0          3d1h
+[root@ip-172-31-17-71 04-controllers]# kubectl describe cronjob batch-job-every-fifteen-minutes
+Name:                          batch-job-every-fifteen-minutes
+Namespace:                     default
+Labels:                        <none>
+Annotations:                   Schedule:  0,15,30,45 * * * *
+Concurrency Policy:            Allow
+Suspend:                       False
+Successful Job History Limit:  3
+Failed Job History Limit:      1
+Starting Deadline Seconds:     <unset>
+Selector:                      <unset>
+Parallelism:                   <unset>
+Completions:                   <unset>
+Pod Template:
+  Labels:  app=periodic-batch-job
+  Containers:
+   main:
+    Image:           luksa/batch-job
+    Port:            <none>
+    Host Port:       <none>
+    Environment:     <none>
+    Mounts:          <none>
+  Volumes:           <none>
+Last Schedule Time:  <unset>
+Active Jobs:         <none>
+Events:              <none>
+[root@ip-172-31-17-71 04-controllers]# kubectl get po -A
+NAMESPACE     NAME                                                                      READY   STATUS    RESTARTS   AGE
+default       kubia-krbtp                                                               1/1     Running   0          24h
+default       kubia-mq487                                                               1/1     Running   0          24h
+default       kubia-s84b6                                                               1/1     Running   0          26m
+default       kubia-v4sth                                                               1/1     Running   0          24h
+default       nginx-kalyan                                                              1/1     Running   0          2d2h
+kube-system   calico-etcd-pzn46                                                         1/1     Running   0          3d
+kube-system   calico-kube-controllers-7997dc8d7b-z5tsb                                  1/1     Running   0          3d
+kube-system   calico-node-6zr8z                                                         2/2     Running   2          3d
+kube-system   calico-node-ggmcd                                                         2/2     Running   2          3d
+kube-system   coredns-66bff467f8-5rvqv                                                  1/1     Running   0          3d1h
+kube-system   coredns-66bff467f8-9qpq7                                                  1/1     Running   0          3d1h
+kube-system   etcd-ip-172-31-17-71.ap-southeast-1.compute.internal                      1/1     Running   0          3d1h
+kube-system   kube-apiserver-ip-172-31-17-71.ap-southeast-1.compute.internal            1/1     Running   0          3d1h
+kube-system   kube-controller-manager-ip-172-31-17-71.ap-southeast-1.compute.internal   1/1     Running   0          3d1h
+kube-system   kube-proxy-4qrtb                                                          1/1     Running   0          3d1h
+kube-system   kube-proxy-cxnkn                                                          1/1     Running   0          3d1h
+kube-system   kube-scheduler-ip-172-31-17-71.ap-southeast-1.compute.internal            1/1     Running   0          3d1h
+[root@ip-172-31-17-71 04-controllers]# kubectl get cronjob batch-job-every-fifteen-minutes
+NAME                              SCHEDULE             SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+batch-job-every-fifteen-minutes   0,15,30,45 * * * *   False     0        <none>          9m53s
+[root@ip-172-31-17-71 04-controllers]# kubectl get cronjob batch-job-every-fifteen-minutes
+NAME                              SCHEDULE             SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+batch-job-every-fifteen-minutes   0,15,30,45 * * * *   False     1        34s             11m
+[root@ip-172-31-17-71 04-controllers]# kubectl get po -A
+NAMESPACE     NAME                                                                      READY   STATUS    RESTARTS   AGE
+default       batch-job-every-fifteen-minutes-1656747900-4mb9t                          1/1     Running   0          37s
+default       kubia-krbtp                                                               1/1     Running   0          24h
+default       kubia-mq487                                                               1/1     Running   0          24h
+default       kubia-s84b6                                                               1/1     Running   0          27m
+default       kubia-v4sth                                                               1/1     Running   0          24h
+default       nginx-kalyan                                                              1/1     Running   0          2d2h
+kube-system   calico-etcd-pzn46                                                         1/1     Running   0          3d
+kube-system   calico-kube-controllers-7997dc8d7b-z5tsb                                  1/1     Running   0          3d
+kube-system   calico-node-6zr8z                                                         2/2     Running   2          3d
+kube-system   calico-node-ggmcd                                                         2/2     Running   2          3d
+kube-system   coredns-66bff467f8-5rvqv                                                  1/1     Running   0          3d1h
+kube-system   coredns-66bff467f8-9qpq7                                                  1/1     Running   0          3d1h
+kube-system   etcd-ip-172-31-17-71.ap-southeast-1.compute.internal                      1/1     Running   0          3d1h
+kube-system   kube-apiserver-ip-172-31-17-71.ap-southeast-1.compute.internal            1/1     Running   0          3d1h
+kube-system   kube-controller-manager-ip-172-31-17-71.ap-southeast-1.compute.internal   1/1     Running   0          3d1h
+kube-system   kube-proxy-4qrtb                                                          1/1     Running   0          3d1h
+kube-system   kube-proxy-cxnkn                                                          1/1     Running   0          3d1h
+kube-system   kube-scheduler-ip-172-31-17-71.ap-southeast-1.compute.internal            1/1     Running   0          3d1h
+[root@ip-172-31-17-71 04-controllers]# kubectl describe po batch-job-every-fifteen-minutes-1656747900-4mb9t
+Name:         batch-job-every-fifteen-minutes-1656747900-4mb9t
+Namespace:    default
+Priority:     0
+Node:         ip-172-31-16-138.ap-southeast-1.compute.internal/172.31.16.138
+Start Time:   Sat, 02 Jul 2022 07:45:00 +0000
+Labels:       app=periodic-batch-job
+              controller-uid=daba41bf-65a1-461e-b046-1b031216d6c5
+              job-name=batch-job-every-fifteen-minutes-1656747900
+Annotations:  <none>
+Status:       Running
+IP:           192.168.2.9
+IPs:
+  IP:           192.168.2.9
+Controlled By:  Job/batch-job-every-fifteen-minutes-1656747900
+Containers:
+  main:
+    Container ID:   docker://ca9a922f80c0b19c8bdb178d689ca1f8b5013a546a93dd2ca82a7b46c14e6cae
+    Image:          luksa/batch-job
+    Image ID:       docker-pullable://luksa/batch-job@sha256:572a3eba91f3349063f7eb00c03cdb5e1b8f50ca88b8cdf30df8ae218564055b
+    Port:           <none>
+    Host Port:      <none>
+    State:          Running
+      Started:      Sat, 02 Jul 2022 07:45:06 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-pclhz (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             True
+  ContainersReady   True
+  PodScheduled      True
+Volumes:
+  default-token-pclhz:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-pclhz
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute for 300s
+                 node.kubernetes.io/unreachable:NoExecute for 300s
+Events:
+  Type    Reason     Age   From                                                       Message
+  ----    ------     ----  ----                                                       -------
+  Normal  Scheduled  50s   default-scheduler                                          Successfully assigned default/batch-job-every-fifteen-minutes-1656747900-4mb9t to ip-172-31-16-138.ap-southeast-1.compute.internal
+  Normal  Pulling    50s   kubelet, ip-172-31-16-138.ap-southeast-1.compute.internal  Pulling image "luksa/batch-job"
+  Normal  Pulled     45s   kubelet, ip-172-31-16-138.ap-southeast-1.compute.internal  Successfully pulled image "luksa/batch-job"
+  Normal  Created    44s   kubelet, ip-172-31-16-138.ap-southeast-1.compute.internal  Created container main
+  Normal  Started    44s   kubelet, ip-172-31-16-138.ap-southeast-1.compute.internal  Started container main
+[root@ip-172-31-17-71 04-controllers]# kubectl get po
+NAME                                               READY   STATUS    RESTARTS   AGE
+batch-job-every-fifteen-minutes-1656747900-4mb9t   1/1     Running   0          56s
+kubia-krbtp                                        1/1     Running   0          24h
+kubia-mq487                                        1/1     Running   0          24h
+kubia-s84b6                                        1/1     Running   0          27m
+kubia-v4sth                                        1/1     Running   0          24h
+nginx-kalyan                                       1/1     Running   0          2d2h
+[root@ip-172-31-17-71 04-controllers]#
+
+======================================================================
+==================================================================
+
+4. Find out what is the command to "get" the running jobs.
+
+[root@ip-172-31-17-71 04-controllers]# kubectl get cronjob batch-job-every-fifteen-minutes
+NAME                              SCHEDULE             SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+batch-job-every-fifteen-minutes   0,15,30,45 * * * *   False     0        2m47s           13m
+
+==============================================
+5.--> aBove
+6. Also identify how you would "permanently arrest" the jobs from running.
+
+[root@ip-172-31-17-71 04-controllers]# kubectl get po
+NAME           READY   STATUS    RESTARTS   AGE
+kubia-krbtp    1/1     Running   0          24h
+kubia-mq487    1/1     Running   0          24h
+kubia-s84b6    1/1     Running   0          32m
+kubia-v4sth    1/1     Running   0          24h
+nginx-kalyan   1/1     Running   0          2d2h
+
+=================================================
+
+7. What is the change from normal Jobs (jobs v/s cronJobs) - Your observation in one sentence.
+
+Ans:- Normal job file use to trigger the pod at the same time and kept it running till it was not deleted. 
+
+While cronJob file use to trigger the pod at the specific time ( example in above result pod is triggering after every 15 mins).
+
+
+
+

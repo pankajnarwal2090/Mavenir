@@ -6,7 +6,7 @@ Compare the kubia-rc.yaml (/root/kubernetes-training/04-controllers) and the kub
 1,2c1,2
 < apiVersion: v1
 < kind: ReplicationController
----
+--- 
 > apiVersion: apps/v1
 > kind: ReplicaSet
 4c4

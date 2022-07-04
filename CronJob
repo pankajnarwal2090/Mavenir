@@ -37,7 +37,7 @@ spec:
           containers:
           - name: main
             image: luksa/batch-job
-[root@ip-172-31-17-71 04-controllers]#
+[root@ip-172-31-17-71 04-controllers]#  
 
 [root@ip-172-31-17-71 05-services]# cd /root/kubernetes-training/04-controllers
 [root@ip-172-31-17-71 04-controllers]# ll

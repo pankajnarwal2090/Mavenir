@@ -1,0 +1,22 @@
+You have deployed an application, that is listening at port 8000. You used a replica-set to deploy it and created a NodePort service to make it accessible. But when you test it, somehow the application is not reachable at the port. Write down your approach and sequentially all the steps that you will take to find out the issue.
+
+Observation:
+Below are the debugging steps if application is not accessible on 8000 port.
+
+
+#############################################################################################################
+
+1- Check that the deployment.yaml file have correct name and port number and the same in my service.yaml. 
+
+2- Check that endpoints are defined or not.
+
+3- Check that service specification is defined or not.
+
+4- Check that service accept connections on port 8000 and then forward it to port 8000 (targetPort) on pod. But pod listen on port 8080 (containerPort). So one of them should be changed to match another - targetPort or containerPort.
+
+Overall  pod and service aren't in sync.
+ 
+Above are some steps we can check to debug the issue.
+
+
+#############################################################################################################

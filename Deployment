@@ -1,0 +1,83 @@
+Suppose you have deployed your application using a deployment controller. Assume the initial number of replicas is one. Write the steps needed to update a container's image using deployment, making sure that there is zero downtime.
+
+Observation:
+Below are the steps to update the container image without zero downtime.
+
+
+#############################################################################################################
+
+deployment.yaml file content.
+
+cat deployment.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+		
+
+#############################################################################################################
+
+
+#############################################################################################################
+
+Create the Deployment by running the following command:
+		
+kubectl apply -f deployment.yaml
+
+Run the kubectl get deployments a few seconds later. The output is similar to this:
+
+NAME               READY   UP-TO-DATE   AVAILABLE   AGE
+nginx-deployment   1/1     1            1           18s
+
+
+#############################################################################################################
+
+
+#############################################################################################################
+
+Steps to update the container's image using deployment
+
+kubectl set image deployment/nginx-deployment nginx=nginx:1.16.1
+
+Get details of your Deployment to check the container image version:
+
+kubectl describe deployments
+
+Output:
+
+Name:                   nginx-deployment
+Namespace:              default
+CreationTimestamp:      Thu, 22 May 2022 10:56:25 +0000
+Labels:                 app=nginx
+Annotations:            deployment.kubernetes.io/revision=2
+Selector:               app=nginx
+Replicas:               1 desired | 1 updated | 1 total | 1 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  app=nginx
+   Containers:
+    nginx:
+      Image:        nginx:1.16.1
+      Port:         80/TCP
+
+#############################################################################################################

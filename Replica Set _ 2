@@ -1,0 +1,42 @@
+Write a common use-case, where you will use a daemon set instead of replica set.
+
+Observation:
+Below are the steps to create daemon set.
+
+#############################################################################################################
+Below are the configuration files for creating a DaemonSet. Save this configuration in DemonSet.yml file.
+
+cat DemonSet.yml
+
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  labels:
+    app: nginx
+  name: example-daemon
+spec:
+  template:
+     metadata:
+       labels:
+        app: nginx
+     spec:   
+       containers:
+         – name: nginx
+           image: nginx
+		   
+This is the configuration of a DaemonSet for nginx.
+
+
+#############################################################################################################
+
+
+#############################################################################################################
+
+To create the Deamon Set, execute below commands.
+
+ kubectl create -f DemonSet.yml
+
+This daemonSet will create a pod in every node running in our cluster.
+
+
+#############################################################################################################

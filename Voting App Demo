@@ -1,5 +1,37 @@
 
+1. Commands that you used during the assignment.
 
+Kubectl apply -f deployment.yaml
+kubectl get service
+kubectl get deployment
+
+When we Open the result and vote app in two browser. And did the voting, the result get updated accordingly
+
+2. snapshot of logs (wherever possible)
+
+Not able to access ---
+
+3. your comment on WHY result app STOPPED working after db pod stop
+
+When we delete the db pod, the result to access the db pod to access the result, 
+and when db is deleted and there is no result so when we tried to reach the db to access the result.
+
+4. your answer to HOW YOU MADE THE RESULT POD work. 
+
+When we deleted the db pod and now to bring up the result pod working, we need to re-deployed the db pod. 
+After which result pod start working and start capturing the result but from start as it lost the old result.
+
+5. Some jargons (just names are enough- dont need sentences) that you learnt from the 40-hour Training session
+
+1- Docker,
+2- Container
+3- kubectl
+4- k8s/pods
+5- service
+6- deployment
+7- helm charts
+8- yaml file
+9- config Map
 
 
 

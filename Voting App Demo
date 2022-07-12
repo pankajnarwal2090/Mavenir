@@ -1,0 +1,68 @@
+1. go to root (cd /root/ ) . (both Master and Worker can perform this in their instances)
+
+2. git clone https://github.com/ashishrpandey/example-voting-app
+
+3. go to /root/example-voting-app/k8s-specifications
+
+[root@ip-172-31-21-197 k8s-specifications]#  kubectl apply -f .
+deployment.apps/db created
+service/db created
+deployment.apps/redis created
+service/redis created
+deployment.apps/result created
+service/result created
+deployment.apps/vote created
+service/vote created
+deployment.apps/worker created
+
+[root@ip-172-31-21-197 k8s-specifications]# kubectl get service
+NAME               TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+db                 ClusterIP   10.97.128.176    <none>        5432/TCP         19s
+kubia              ClusterIP   10.98.6.107      <none>        80/TCP           90m
+mavenir-mysql      ClusterIP   10.99.73.78      <none>        3306/TCP         2d5h
+mysql-1653043237   ClusterIP   10.111.102.25    <none>        3306/TCP         2d5h
+redis              ClusterIP   10.108.170.145   <none>        6379/TCP         19s
+result             NodePort    10.109.115.1     <none>        5001:31001/TCP   19s
+vote               NodePort    10.102.150.67    <none>        5000:31000/TCP   19s
+[root@ip-172-31-21-197 k8s-specifications]#
+
+================================================================================================
+
+ When we Open the result and vote app in two browser. And did the voting, the result get updated accordingly
+
+==========================================================================================================
+
+Now try to delete the Pods one by one (first voting Pod, then worker pod, then db pod) and see what happens to the voting and result app after deleting.
+
+When we delete the pods in  the sequence, vote, result and then db. after vote pod deletion, result pod was still accessible.
+but when db pod is deleted complete result was deleted and it stop working but still result was accessible
+
+==============================================================================================================
+
+what happens after db pod deletion  
+
+result not captured as pod stop working
+
+When we deleted the db pod and now to bring up the result pod working, we need to re-deployed the db pod. After which result pod start working and start capturing the result but from start as it lost the old result.
+
+  1- [root@ip-172-31-21-197 k8s-specifications]#  kubectl apply -f db-deployment.yaml
+deployment.apps/db created
+[root@ip-172-31-21-197 k8s-specifications]#  kubectl apply -f db-service.yaml
+service/db created
+
+====================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
